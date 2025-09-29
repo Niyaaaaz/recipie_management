@@ -1,15 +1,18 @@
-const express = require('express');
-const { resolve } = require('path');
+const express = require("express");
+const mongoose = require("mongoose");
+const taskRoutes = require("./routes/taskRoutes");
 
 const app = express();
-const port = 3010;
 
-app.use(express.static('static'));
+// Middleware
+app.use(express.json());
 
-app.get('/', (req, res) => {
-  res.sendFile(resolve(__dirname, 'pages/index.html'));
-});
+// Routes
+app.use(taskRoutes);
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
-});
+// Connect to MongoDB
+mongoose.connect("mongodb://localhost:27017/tasksDB")
+  .then(() => console.log("MongoDB connected"))
+  .catch(err => console.log(err));
+
+app.listen(3000, () => console.log("Server running on port 3000"));
